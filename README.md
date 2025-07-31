@@ -17,6 +17,12 @@ b. **Click the "Fork" Button:**
 c. **Wait for the Forking Process to Complete:**
    - GitHub will take a few moments to create the fork. Once complete, you’ll be redirected to your newly created fork.
 
+
+
+https://github.com/user-attachments/assets/92e746e1-3143-4769-8a5a-1339e4bd7a14
+
+
+
 ## 🚀 Start with Codespaces
 This is the fastest way to get up and running!
 
@@ -28,4 +34,7 @@ This is the fastest way to get up and running!
 
 2. **Start Coding:**
    - Run the command ```algokit init```
-   - Choose dApp Frontend
+
+
+https://github.com/user-attachments/assets/ee3fda3e-f4fe-4190-867b-0a626f0eb099
+
