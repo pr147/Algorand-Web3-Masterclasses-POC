@@ -29,5 +29,3 @@ This is the fastest way to get up and running!
 2. **Start Coding:**
    - Run the command ```algokit init```
    - Choose dApp Frontend
-
-<img width="570" alt="Screenshot 2024-12-10 at 14 58 16" src="https://github.com/user-attachments/assets/f079d90d-3fa7-45c5-b339-170b7fec772d">
