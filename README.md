@@ -22,9 +22,6 @@ This is the fastest way to get up and running!
 
 1. **Create a Codespace:**
 
-https://github.com/user-attachments/assets/42b0f758-b05b-4d81-9950-b316c4330907
-
-
    - Click the green "Code" button at the top right of your forked repo.
    - Select "Create codespace on main".
    - Once your Codespace is fully loaded, you are ready to go!
