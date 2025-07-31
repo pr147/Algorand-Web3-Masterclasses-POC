@@ -1,8 +1,11 @@
 # The Web3 Masterclasses Set Up!
 
-Welcome to the Web3 Masterclasses Set up! This repository is designed to provide you with everything you need to start building on the Algorand blockchain.
+Welcome to the Web3 Masterclasses Setup! This repository is designed to provide you with everything you need to start building on the Algorand blockchain.
 
-## 🌟 Quick Start Guide
+📘 **New here?** Check out our [Reference Guide](https://github.com/Ganainmtech/Algorand-Web3-Masterclasses-POC)  
+It includes prompts, setup instructions, and AI tips to help you follow along with the Web3 Masterclasses!
+
+## 🌟 How To Get Started Instructions
 
 ### **Fork the Repo:**
 
