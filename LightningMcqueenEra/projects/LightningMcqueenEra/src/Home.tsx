@@ -7,13 +7,21 @@ import Transact from './components/Transact'
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
-  const [openWalletModal, setOpenWalletModal] = useState<boolean>(false)
-  const [openDemoModal, setOpenDemoModal] = useState<boolean>(false)
-  const [claimed, setClaimed] = useState<boolean>(false)
+  const [openWalletModal, setOpenWalletModal] = useState(false)
+  const [openDemoModal, setOpenDemoModal] = useState(false)
+  const [paymentSuccess, setPaymentSuccess] = useState(false)
+  const [claimed, setClaimed] = useState(false)
+
   const { activeAddress } = useWallet()
 
   const toggleWalletModal = () => setOpenWalletModal(!openWalletModal)
   const toggleDemoModal = () => setOpenDemoModal(!openDemoModal)
+
+  // called after successful payment
+  const handlePaymentSuccess = () => {
+    setPaymentSuccess(true)
+    setOpenDemoModal(false)
+  }
 
   const handleClaimTicket = () => {
     setClaimed(true)
@@ -41,17 +49,19 @@ const Home: React.FC<HomeProps> = () => {
             and unlock the new era of <span className="text-white font-bold">futuristic racing</span>.
           </p>
 
-          {/* Buttons */}
+          {/* Buttons Flow */}
           <div className="flex flex-col gap-4 mt-6">
+            {/* Always show Connect Wallet */}
             <button
               data-test-id="connect-wallet"
               className="btn bg-black text-red-500 border border-red-600 hover:bg-red-600 hover:text-white transition-all duration-300 shadow-lg"
               onClick={toggleWalletModal}
             >
-              Connect Wallet
+              {activeAddress ? 'Wallet Connected ✅' : 'Connect Wallet'}
             </button>
 
-            {activeAddress && (
+            {/* Show Send Payment once wallet connected */}
+            {activeAddress && !paymentSuccess && (
               <button
                 data-test-id="transactions-demo"
                 className="btn bg-neutral-900 text-gray-300 border border-gray-600 hover:bg-gray-700 hover:text-white transition-all duration-300 shadow-lg"
@@ -61,12 +71,15 @@ const Home: React.FC<HomeProps> = () => {
               </button>
             )}
 
-            <button
-              className="btn bg-gradient-to-r from-gray-100 to-gray-300 text-black border-none hover:from-red-500 hover:to-red-600 hover:text-white transition-all duration-300 shadow-xl"
-              onClick={handleClaimTicket}
-            >
-              Get Your McQueen Now
-            </button>
+            {/* Show McQueen button only after payment */}
+            {activeAddress && paymentSuccess && (
+              <button
+                className="btn bg-gradient-to-r from-gray-100 to-gray-300 text-black border-none hover:from-red-500 hover:to-red-600 hover:text-white transition-all duration-300 shadow-xl"
+                onClick={handleClaimTicket}
+              >
+                Get Your McQueen Now
+              </button>
+            )}
           </div>
 
           {/* Success Message */}
@@ -78,7 +91,8 @@ const Home: React.FC<HomeProps> = () => {
 
           {/* Modals */}
           <ConnectWallet openModal={openWalletModal} closeModal={toggleWalletModal} />
-          <Transact openModal={openDemoModal} setModalState={setOpenDemoModal} />
+          {/* pass onSuccess so Transact can notify when done */}
+          <Transact openModal={openDemoModal} setModalState={setOpenDemoModal} onSuccess={handlePaymentSuccess} />
         </div>
       </div>
     </div>

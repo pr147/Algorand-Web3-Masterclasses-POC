@@ -7,9 +7,10 @@ import { getAlgodConfigFromViteEnvironment } from '../utils/network/getAlgoClien
 interface TransactInterface {
   openModal: boolean
   setModalState: (value: boolean) => void
+  onSuccess: () => void   // ✅ added to notify Home.tsx
 }
 
-const Transact = ({ openModal, setModalState }: TransactInterface) => {
+const Transact = ({ openModal, setModalState, onSuccess }: TransactInterface) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [receiverAddress, setReceiverAddress] = useState<string>('')
 
@@ -17,14 +18,15 @@ const Transact = ({ openModal, setModalState }: TransactInterface) => {
   const algorand = AlgorandClient.fromConfig({ algodConfig })
 
   const { enqueueSnackbar } = useSnackbar()
-
   const { transactionSigner, activeAddress } = useWallet()
 
-  const handleSubmitAlgo = async () => {
+  const handleSubmitAlgo = async (e: React.MouseEvent) => {
+    e.preventDefault()
     setLoading(true)
 
     if (!transactionSigner || !activeAddress) {
       enqueueSnackbar('Please connect wallet first', { variant: 'warning' })
+      setLoading(false)
       return
     }
 
@@ -34,12 +36,16 @@ const Transact = ({ openModal, setModalState }: TransactInterface) => {
         signer: transactionSigner,
         sender: activeAddress,
         receiver: receiverAddress,
-        amount: algo(1),
+        amount: algo(1), // 1 Algo
       })
-      enqueueSnackbar(`Transaction sent: ${result.txIds[0]}`, { variant: 'success' })
+
+      enqueueSnackbar(`✅ Transaction sent: ${result.txIds[0]}`, { variant: 'success' })
       setReceiverAddress('')
+
+      // 🔑 Notify Home.tsx to show "Get Your McQueen"
+      onSuccess()
     } catch (e) {
-      enqueueSnackbar('Failed to send transaction', { variant: 'error' })
+      enqueueSnackbar('❌ Failed to send transaction', { variant: 'error' })
     }
 
     setLoading(false)
@@ -56,18 +62,17 @@ const Transact = ({ openModal, setModalState }: TransactInterface) => {
           placeholder="Provide wallet address"
           className="input input-bordered w-full"
           value={receiverAddress}
-          onChange={(e) => {
-            setReceiverAddress(e.target.value)
-          }}
+          onChange={(e) => setReceiverAddress(e.target.value)}
         />
-        <div className="modal-action ">
+        <div className="modal-action">
           <button className="btn" onClick={() => setModalState(!openModal)}>
             Close
           </button>
           <button
             data-test-id="send-algo"
-            className={`btn ${receiverAddress.length === 58 ? '' : 'btn-disabled'} lo`}
+            className={`btn ${receiverAddress.length === 58 ? '' : 'btn-disabled'}`}
             onClick={handleSubmitAlgo}
+            disabled={loading || receiverAddress.length !== 58}
           >
             {loading ? <span className="loading loading-spinner" /> : 'Send 1 Algo'}
           </button>
