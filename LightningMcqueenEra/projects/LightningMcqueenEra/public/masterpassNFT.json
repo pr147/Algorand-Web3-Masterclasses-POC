@@ -1,0 +1,10 @@
+{
+  "name": "MasterPass",
+  "description": "This is a MasterPass NFT",
+  "image": "https://gateway.pinata.cloud/ipfs/bafybeihduzi6xqabnlz7o2lrymnrj3aj3oyejgg6xwhhhfvyt3nq4gg6le",
+  "unitName": "MP",
+  "properties": {
+    "Tier": "Gold",
+    "Person": 2
+  }
+}

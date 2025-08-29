@@ -2,6 +2,7 @@ import { useWallet } from '@txnlab/use-wallet-react'
 import React, { useState } from 'react'
 import ConnectWallet from './components/ConnectWallet'
 import Transact from './components/Transact'
+import NFTmint from './components/NFTmint'
 
 interface HomeProps {}
 
@@ -23,7 +24,10 @@ const mcqueenImages = [
 const Home: React.FC<HomeProps> = () => {
   const [openWalletModal, setOpenWalletModal] = useState<boolean>(false)
   const [openDemoModal, setOpenDemoModal] = useState<boolean>(false)
+  const [openNFTModal, setOpenNFTModal] = useState<boolean>(false)
+
   const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false)
+  const [nftMinted, setNftMinted] = useState<boolean>(false)
   const [claimed, setClaimed] = useState<boolean>(false)
   const [claimedImg, setClaimedImg] = useState<string | null>(null)
 
@@ -31,18 +35,22 @@ const Home: React.FC<HomeProps> = () => {
 
   const toggleWalletModal = () => setOpenWalletModal(!openWalletModal)
   const toggleDemoModal = () => setOpenDemoModal(!openDemoModal)
+  const toggleNFTModal = () => setOpenNFTModal(!openNFTModal)
 
   const handlePaymentSuccess = () => {
     setPaymentSuccess(true)
     setOpenDemoModal(false)
   }
 
+  const handleNFTSuccess = () => {
+    setNftMinted(true)
+    setOpenNFTModal(false)
+  }
+
   const handleClaimTicket = () => {
-    // pick one random image from the internet list
     const url = mcqueenImages[Math.floor(Math.random() * mcqueenImages.length)]
     setClaimedImg(url)
     setClaimed(true)
-    // keep the image shown; just pulse the success message briefly
     setTimeout(() => setClaimed(false), 2500)
   }
 
@@ -86,8 +94,19 @@ const Home: React.FC<HomeProps> = () => {
               </button>
             )}
 
-            {/* After successful payment, before claim */}
-            {activeAddress && paymentSuccess && !claimedImg && (
+            {/* After successful payment → show Mint button */}
+            {activeAddress && paymentSuccess && !nftMinted && (
+              <button
+                data-test-id="mint-nft"
+                className="btn bg-gradient-to-r from-red-500 to-red-700 text-white border-none hover:from-red-600 hover:to-red-800 transition-all duration-300 shadow-xl"
+                onClick={toggleNFTModal}
+              >
+                Mint MasterPass NFT
+              </button>
+            )}
+
+            {/* After NFT minted → show Claim button */}
+            {activeAddress && paymentSuccess && nftMinted && !claimedImg && (
               <button
                 className="btn bg-gradient-to-r from-gray-100 to-gray-300 text-black border-none hover:from-red-500 hover:to-red-600 hover:text-white transition-all duration-300 shadow-xl"
                 onClick={handleClaimTicket}
@@ -119,6 +138,7 @@ const Home: React.FC<HomeProps> = () => {
           {/* Modals */}
           <ConnectWallet openModal={openWalletModal} closeModal={toggleWalletModal} />
           <Transact openModal={openDemoModal} setModalState={setOpenDemoModal} onSuccess={handlePaymentSuccess} />
+          <NFTmint openModal={openNFTModal} setModalState={setOpenNFTModal} onSuccess={handleNFTSuccess} />
         </div>
       </div>
     </div>
