@@ -7,7 +7,7 @@ import { getAlgodConfigFromViteEnvironment } from '../utils/network/getAlgoClien
 interface TransactInterface {
   openModal: boolean
   setModalState: (value: boolean) => void
-  onSuccess: () => void   // ✅ added to notify Home.tsx
+  onSuccess: () => void
 }
 
 const Transact = ({ openModal, setModalState, onSuccess }: TransactInterface) => {
@@ -20,7 +20,7 @@ const Transact = ({ openModal, setModalState, onSuccess }: TransactInterface) =>
   const { enqueueSnackbar } = useSnackbar()
   const { transactionSigner, activeAddress } = useWallet()
 
-  const handleSubmitAlgo = async (e: React.MouseEvent) => {
+  const handleSubmitAlgo = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     setLoading(true)
 
@@ -32,20 +32,21 @@ const Transact = ({ openModal, setModalState, onSuccess }: TransactInterface) =>
 
     try {
       enqueueSnackbar('Sending transaction...', { variant: 'info' })
+
       const result = await algorand.send.payment({
         signer: transactionSigner,
         sender: activeAddress,
         receiver: receiverAddress,
-        amount: algo(1), // 1 Algo
+        amount: algo(1), // 1 ALGO
       })
 
-      enqueueSnackbar(`✅ Transaction sent: ${result.txIds[0]}`, { variant: 'success' })
+      enqueueSnackbar(`Transaction sent: ${result.txIds[0]}`, { variant: 'success' })
       setReceiverAddress('')
 
-      // 🔑 Notify Home.tsx to show "Get Your McQueen"
+      // notify Home.tsx → reveals "Get Your McQueen"
       onSuccess()
     } catch (e) {
-      enqueueSnackbar('❌ Failed to send transaction', { variant: 'error' })
+      enqueueSnackbar('Failed to send transaction', { variant: 'error' })
     }
 
     setLoading(false)
@@ -64,11 +65,18 @@ const Transact = ({ openModal, setModalState, onSuccess }: TransactInterface) =>
           value={receiverAddress}
           onChange={(e) => setReceiverAddress(e.target.value)}
         />
+
         <div className="modal-action">
-          <button className="btn" onClick={() => setModalState(!openModal)}>
+          <button
+            type="button"
+            className="btn"
+            onClick={() => setModalState(!openModal)}
+          >
             Close
           </button>
+
           <button
+            type="button"
             data-test-id="send-algo"
             className={`btn ${receiverAddress.length === 58 ? '' : 'btn-disabled'}`}
             onClick={handleSubmitAlgo}
