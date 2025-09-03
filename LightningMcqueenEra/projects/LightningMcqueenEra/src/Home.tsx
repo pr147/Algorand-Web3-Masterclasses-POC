@@ -65,6 +65,18 @@ const Home: React.FC = () => {
     if (asaAssetId) fetchAsaBalance(asaAssetId)
   }, [asaAssetId])
 
+  // **Reset all state on logout**
+  useEffect(() => {
+    if (!activeAddress) {
+      setPaymentSuccess(false)
+      setMintedNFTs([])
+      setAsaAssetId(null)
+      setAsaBalance(0)
+      setRecipientAddress('')
+      setSendAmount('')
+    }
+  }, [activeAddress])
+
   // Send ASA tokens
   const handleSendAsa = async () => {
     if (!asaAssetId || !recipientAddress || !sendAmount || !transactionSigner || !activeAddress) return
